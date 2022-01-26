@@ -7,3 +7,16 @@ select {
 select:last-child {
     margin-bottom: 0.5em;
 }
+
+.hidden-print {
+    display: none;
+}
+
+@media print {
+    select {
+        display: none;
+    }
+    .hidden-print {
+        display: block;
+    }
+  }

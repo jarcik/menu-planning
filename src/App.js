@@ -106,7 +106,6 @@ class App extends Component {
 
     //update state with new object of selected menun
     this.setState({selectedMenu: selectedMenu});
-    console.log(this.meals);
   }
 
   //update selected meal object with selected value
