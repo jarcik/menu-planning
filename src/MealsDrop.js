@@ -11,7 +11,16 @@ class MealsDrop extends Component {
   }
 
   handleChange(event) {
-    let newValue = parseInt(event.target.value);
+    let newValue = parseInt(event.target.value);   
+
+    //update selected state
+    if(this.state.value) {
+      let old = this.props.meals.find((q) => q.id === this.state.value);
+      old.selected = false;
+    }    
+    this.props.meals.find((q) => q.id === newValue).selected = true;
+    console.log(this.props.meals);
+
     this.setState({value: newValue});
     this.props.handleMealsDropChange({
         day: this.props.day,
@@ -19,6 +28,7 @@ class MealsDrop extends Component {
         type: this.props.type,
         dayTime: this.props.dayTime
     });
+    console.log(this.props.meals);
   }
 
   render() {    
@@ -29,8 +39,7 @@ class MealsDrop extends Component {
                 this.props.meals.map((meal) => 
                     <option 
                         key={meal.id} 
-                        value={meal.id} 
-                        selected={meal.selected}>
+                        value={meal.id}>
                         {meal.name}
                     </option>
             )}
