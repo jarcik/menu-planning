@@ -1,0 +1,24 @@
+{
+    "meals": [
+      { "id": 1, "name": "soup1",  "category": "soup" },
+      { "id": 2, "name": "soup2", "category": "soup" },
+      { "id": 3, "name": "soup13",  "category": "soup" },
+      { "id": 4, "name": "soup14", "category": "soup" },
+      { "id": 5, "name": "soup15",  "category": "soup" },
+      { "id": 6, "name": "soup16", "category": "soup" },
+      { "id": 8, "name": "sidedish1",  "category": "sidedish" },
+      { "id": 9, "name": "sidedish2", "category": "sidedish" },
+      { "id": 10, "name": "sidedish3",  "category": "sidedish" },
+      { "id": 11, "name": "sidedish4", "category": "sidedish" },
+      { "id": 12, "name": "sidedish5",  "category": "sidedish" },
+      { "id": 13, "name": "sidedish6", "category": "sidedish" },
+      { "id": 14, "name": "salad1",  "category": "salad" },
+      { "id": 15, "name": "salad2", "category": "salad" },
+      { "id": 16, "name": "salad3",  "category": "salad" },
+      { "id": 17, "name": "salad4", "category": "salad" },
+      { "id": 18, "name": "salad5",  "category": "salad" },
+      { "id": 19, "name": "dessert1", "category": "dessert" },
+      { "id": 20, "name": "dessert2",  "category": "dessert" },
+      { "id": 21, "name": "dessert3", "category": "dessert" }
+    ] 
+}

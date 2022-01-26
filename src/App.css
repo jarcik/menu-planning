@@ -1,14 +1,15 @@
-.App {
-  text-align: center;
+
+table {
+    width: calc(100% - 2em);
+    margin: 1em;
 }
 
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+th {
+    margin: 5%;
+    width: calc(95% / 7);
+}
+
+td, th {    
+    border: black 1px solid;
+    padding: 5px;
 }

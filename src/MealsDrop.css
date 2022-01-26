@@ -1,0 +1,9 @@
+select {
+    display: block;
+    margin: 0.5em 0.5em 0 0.5em;
+    width: calc(100% - 1em);
+}
+
+select:last-child {
+    margin-bottom: 0.5em;
+}
