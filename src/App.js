@@ -148,6 +148,37 @@ class App extends Component {
 
   }
 
+  //check and print
+  print = () => {
+    //check before printing
+    if(this.check()) {
+      //everything alright, lets prnt
+      window.print();
+    } else {
+      alert("Nejsou vyplněna všechna pole. Prosím, doplňte.");
+    }
+  }
+
+  //check if every object in menu is selected
+  check() {
+    for(let i = 0; i < 7; i++) {
+      let meal = this.state.selectedMenu[i];
+      if(!meal 
+          || !meal.lunch || !meal.lunch.soup || !meal.lunch.salad || !meal.lunch.sidedish
+          || !meal.dinner || !meal.dinner.soup || !meal.dinner.salad || !meal.dinner.sidedish
+          || !meal.dessert)
+        return false;
+    }
+    return true;
+  }
+
+  //get date for the next weekday
+  getDate(day) {
+    let d = new Date();
+    d.setDate(d.getDate() + ((7 - d.getDay()) % 7 + (day+1)) % 7);
+    return d.toLocaleDateString("cs-CZ");
+  }
+
   render() {
     const { error, isLoaded } = this.state;
     if (error) {
@@ -162,13 +193,13 @@ class App extends Component {
           <thead>
             <tr>
               {/* days of the week + date */}
-              <th>Pondělí</th>
-              <th>Úterý</th>
-              <th>Středa</th>
-              <th>Čtvrtek</th>
-              <th>Pátek</th>
-              <th>Sobota</th>
-              <th>Neděle</th>
+              <th>Pondělí<br/>{this.getDate(0)}</th>
+              <th>Úterý<br/>{this.getDate(1)}</th>
+              <th>Středa<br/>{this.getDate(2)}</th>
+              <th>Čtvrtek<br/>{this.getDate(3)}</th>
+              <th>Pátek<br/>{this.getDate(4)}</th>
+              <th>Sobota<br/>{this.getDate(5)}</th>
+              <th>Neděle<br/>{this.getDate(6)}</th>
             </tr>
           </thead>
           <tbody>
@@ -217,6 +248,7 @@ class App extends Component {
             </tr>
           </tbody>
           </table>
+          <button disabled={this.check() ? "" : "disabled"} onClick={this.print}>Vytisknout</button>
         </div>
       );
     }

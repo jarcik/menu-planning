@@ -1,7 +1,6 @@
 
 table {
-    width: calc(100% - 2em);
-    margin: 1em;
+    width: calc(100% - 40px);
 }
 
 th {
@@ -12,4 +11,16 @@ th {
 td, th {    
     border: black 1px solid;
     padding: 5px;
+}
+
+button {
+    font-size: 2em;
+}
+
+table, button {
+    margin: 20px;
+}
+
+button {
+    margin-top: 0;
 }
