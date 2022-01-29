@@ -3,6 +3,9 @@ import React, { Component } from 'react';
 import MealsDrop from './MealsDrop';
 import { LUNCH, DESSERTTYPE, DINNER, SOUP, SALAD, SIDEDISH, DESSERT } from './constants';
 
+const urlAddress = "http://127.0.0.1:8080/edsa-menu-planning/";
+//const urlAddress = "";
+
 class App extends Component {
 
   constructor(props) {
@@ -76,7 +79,7 @@ class App extends Component {
   //load saved state from server
   loadSavedFromServer() {    
     //load saved
-    fetch("http://127.0.0.1:8080/edsa-menu-planning/get-meal.php")
+    fetch(urlAddress+"get-meal.php")
     .then(response => {
       return response.text()
     })
@@ -176,7 +179,7 @@ class App extends Component {
 
   saveToServer(selectedMenu) {
     //save change
-    fetch("http://127.0.0.1:8080/edsa-menu-planning/post-meal.php", {
+    fetch(urlAddress+"post-meal.php", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -258,6 +261,12 @@ class App extends Component {
     let newMenu = this.createNewSelectedMenu();
     this.setState({selectedMenu: newMenu});
     this.saveToServer(newMenu);
+
+    let newMealsList = this.state.meals.slice();
+    newMealsList.forEach(q => {
+      q.selected = false;
+    });
+    
   }
 
   //check if every object in menu is selected
