@@ -1,23 +1,20 @@
 <?php
-
-    header("Access-Control-Allow-Origin: *");
-    header("Content-Type: application/json; charset=UTF-8");
-    header("Access-Control-Allow-Methods: POST");
-    header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
-    
     if(isset($_POST))
-    {    
-        $data = json_decode($_POST['meal']);
-        file_put_contents("saved-meal-planning.json", json_encode($data));
-        echo $_POST['meal'];
+    {   
+        // Takes raw data from the request
+        $json = file_get_contents('php://input');        
+        // Converts it into a PHP object
+        $data = json_decode($json);
+        if($json) {
+            file_put_contents("saved-meal-planning.json", json_encode($data));
+            http_response_code(200);  
+        } else {
+            echo "no data";
+        }
     }
     else
     {
         echo 'Data not comes here';
     }
-    // if(!empty($_POST['meal'])) {
-    //     http_response_code(200);    
-    //     echo json_encode($data);
-    // }
 
 ?>

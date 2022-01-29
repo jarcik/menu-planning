@@ -15,12 +15,12 @@ class App extends Component {
         isLoaded: false,
         selectedMenu: this.createNewSelectedMenu()
       };
+    }
 
+  componentDidMount() {   
       //load list of meals
       this.loadMealsFromFile();
-      //load saved state
-      this.loadSavedFromServer();
-    }
+  }
   
   //create initial object of selected meal plan
   createNewSelectedMenu() {    
@@ -57,16 +57,16 @@ class App extends Component {
     .then(
       (result) => {
         this.setState({
-          isLoaded: true,
           meals: result.meals
-        });
+        });          
+        //load saved state
+        this.loadSavedFromServer();
       },
       // Note: it's important to handle errors here
       // instead of a catch() block so that we don't swallow
       // exceptions from actual bugs in components.
       (error) => {
         this.setState({
-          isLoaded: true,
           error
         });
       }
@@ -82,8 +82,9 @@ class App extends Component {
     })
     .then((result) => {
       let data = result ? JSON.parse(result) : {};
-      console.log(data);
-      this.setState({selectedMenu: data.meals});
+      this.setState({selectedMenu: data.meals});      
+      //set selected
+      this.setSelected(data.meals);
     },
     (error) => {
       console.log(error);
@@ -120,6 +121,44 @@ class App extends Component {
     return meals;
   }
 
+  //goes throught every object of selected menu and mark meals selected
+  setSelected(selectedMenu) {
+    let typesArray = [SALAD, SIDEDISH, SOUP, DESSERT];
+    let dayTimeArray = [LUNCH, DINNER, DESSERTTYPE];
+    for(let i = 0; i < 7; i++) {
+      dayTimeArray.forEach(dTA => {
+        typesArray.forEach(tA => {          
+          let selected = this.getDateTimeMeal(dTA, selectedMenu[i]);
+          let selectedValue = null;
+          //update value
+          switch(tA) {
+            case SOUP:
+              selectedValue = selected.soup;
+              break;
+            case SIDEDISH:
+              selectedValue = selected.sidedish;
+              break;
+            case SALAD:
+              selectedValue = selected.salad;
+              break;
+            case DESSERT:
+              selectedValue = selected.dessert;
+              break;
+            default:
+              break;
+          }
+          if(selectedValue !== undefined && selectedValue !== "" && selectedValue !== null) {
+            let meal = this.state.meals.find((q) => q.id === selectedValue);
+            if(meal) {
+              meal.selected = true;
+            }
+          }
+        });
+      });
+    }
+    this.setState({isLoaded:true});
+  }
+
   //handle change on the meals dropdown component and update the state
   dropChange = param => {
     let selectedMenu = this.state.selectedMenu;
@@ -132,26 +171,24 @@ class App extends Component {
 
     //update state with new object of selected menun
     this.setState({selectedMenu: selectedMenu});
-    //this.saveToServer(selectedMenu);
+    this.saveToServer(selectedMenu);
   }
 
   saveToServer(selectedMenu) {
-
     //save change
     fetch("http://127.0.0.1:8080/edsa-menu-planning/post-meal.php", {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({meal: selectedMenu})
+      body: JSON.stringify({meals: selectedMenu}),
+      meals: JSON.stringify({meals: selectedMenu}),
+      data: JSON.stringify({meals: selectedMenu})
     })
     .then(response => {
       return response.text()
     })
     .then((result) => {
-      let data = result ? JSON.parse(result) : {}
-      console.log(data);
-      this.setState({selectedMenu: data.meals});
     },
     (error) => {
       console.log(error);
@@ -202,7 +239,7 @@ class App extends Component {
   }
 
   //check and print
-  print = () => {
+  print = (clear=false) => {
     //check before printing
     if(this.check()) {
       //everything alright, lets prnt
@@ -210,6 +247,17 @@ class App extends Component {
     } else {
       alert("Nejsou vyplněna všechna pole. Prosím, doplňte.");
     }
+    //clear the data from table if needed
+    if(clear) {
+      this.clear();
+    }
+  }
+
+  //clean the selected data from table
+  clear() {
+    let newMenu = this.createNewSelectedMenu();
+    this.setState({selectedMenu: newMenu});
+    this.saveToServer(newMenu);
   }
 
   //check if every object in menu is selected
@@ -228,7 +276,7 @@ class App extends Component {
   //get date for the next weekday
   getDate(day) {
     let d = new Date();
-    d.setDate(d.getDate() + ((7 - d.getDay()) % 7 + (day+1)) % 7);
+    d.setDate(d.getDate() + ((7 - d.getDay()) % 7 + 1) % 7 + day);
     return d.toLocaleDateString("cs-CZ");
   }
 
@@ -266,9 +314,9 @@ class App extends Component {
                 //for each day of the week print cell with drops
                 days.map((day, index) => (
                     <td key={index}>
-                      <MealsDrop key={"lunch"+SOUP+index} dayTime={LUNCH} meals={this.getMeals(SOUP, LUNCH, index)} type={SOUP} day={index} handleMealsDropChange={this.dropChange} />
-                      <MealsDrop key={"lunch"+SIDEDISH+index} dayTime={LUNCH} meals={this.getMeals(SIDEDISH, LUNCH, index)} type={SIDEDISH} day={index} handleMealsDropChange={this.dropChange} />
-                      <MealsDrop key={"lunch"+SALAD+index} dayTime={LUNCH} meals={this.getMeals(SALAD, LUNCH, index)} type={SALAD} day={index} handleMealsDropChange={this.dropChange} />
+                      <MealsDrop key={"lunch"+SOUP+index} selectedMenu={this.state.selectedMenu} dayTime={LUNCH} meals={this.getMeals(SOUP, LUNCH, index)} type={SOUP} day={index} handleMealsDropChange={this.dropChange} />
+                      <MealsDrop key={"lunch"+SIDEDISH+index} selectedMenu={this.state.selectedMenu} dayTime={LUNCH} meals={this.getMeals(SIDEDISH, LUNCH, index)} type={SIDEDISH} day={index} handleMealsDropChange={this.dropChange} />
+                      <MealsDrop key={"lunch"+SALAD+index} selectedMenu={this.state.selectedMenu} dayTime={LUNCH} meals={this.getMeals(SALAD, LUNCH, index)} type={SALAD} day={index} handleMealsDropChange={this.dropChange} />
                     </td>
                 ))
               }
@@ -280,7 +328,7 @@ class App extends Component {
                 //for each day of the week print cell with drops
                 days.map((day, index) => (
                     <td key={index}>
-                      <MealsDrop key={"dessert"+index} dayTime={DESSERTTYPE} meals={this.getMeals(DESSERT, DESSERTTYPE, index)} type={DESSERT} day={index} handleMealsDropChange={this.dropChange} />
+                      <MealsDrop key={"dessert"+index} selectedMenu={this.state.selectedMenu}  dayTime={DESSERTTYPE} meals={this.getMeals(DESSERT, DESSERTTYPE, index)} type={DESSERT} day={index} handleMealsDropChange={this.dropChange} />
                     </td>
                 ))
               }
@@ -292,16 +340,18 @@ class App extends Component {
                 //for each day of the week print cell with drops
                 days.map((day, index) => (
                     <td key={index}>
-                      <MealsDrop key={"dinner"+SOUP+index} dayTime={DINNER} meals={this.getMeals(SOUP, DINNER, index)} type={SOUP} day={index} handleMealsDropChange={this.dropChange} />
-                      <MealsDrop key={"dinner"+SIDEDISH+index} dayTime={DINNER} meals={this.getMeals(SIDEDISH, DINNER, index)} type={SIDEDISH} day={index} handleMealsDropChange={this.dropChange} />
-                      <MealsDrop key={"dinner"+SALAD+index} dayTime={DINNER} meals={this.getMeals(SALAD, DINNER, index)} type={SALAD} day={index} handleMealsDropChange={this.dropChange} />
+                      <MealsDrop key={"dinner"+SOUP+index} selectedMenu={this.state.selectedMenu}  dayTime={DINNER} meals={this.getMeals(SOUP, DINNER, index)} type={SOUP} day={index} handleMealsDropChange={this.dropChange} />
+                      <MealsDrop key={"dinner"+SIDEDISH+index} selectedMenu={this.state.selectedMenu}  dayTime={DINNER} meals={this.getMeals(SIDEDISH, DINNER, index)} type={SIDEDISH} day={index} handleMealsDropChange={this.dropChange} />
+                      <MealsDrop key={"dinner"+SALAD+index} selectedMenu={this.state.selectedMenu}  dayTime={DINNER} meals={this.getMeals(SALAD, DINNER, index)} type={SALAD} day={index} handleMealsDropChange={this.dropChange} />
                     </td>
                 ))
               }
             </tr>
           </tbody>
           </table>
-          <button disabled={this.check() ? "" : "disabled"} onClick={this.print}>Vytisknout</button>
+          <button disabled={this.check() ? "" : "disabled"} onClick={() => this.print(false)}>Vytisknout</button>
+          <button disabled={this.check() ? "" : "disabled"} onClick={() => this.print(true)}>Vytisknout a vyčistit</button>
+          <button onClick={() => this.clear()}>Vyčistit</button>
         </div>
       );
     }
