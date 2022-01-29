@@ -1,0 +1,95 @@
+{
+    "meals" : [
+        {
+            "lunch": {
+                "soup" : "",
+                "sidedish": "",
+                "salad": ""
+            },
+            "dessert": "",
+            "dinner": {
+                "soup" : "",
+                "sidedish": "",
+                "salad": ""
+            }
+        },
+        {
+            "lunch": {
+                "soup" : "",
+                "sidedish": "",
+                "salad": ""
+            },
+            "dessert": "",
+            "dinner": {
+                "soup" : "",
+                "sidedish": "",
+                "salad": ""
+            }
+        },
+        {
+            "lunch": {
+                "soup" : "",
+                "sidedish": "",
+                "salad": ""
+            },
+            "dessert": "",
+            "dinner": {
+                "soup" : "",
+                "sidedish": "",
+                "salad": ""
+            }
+        },
+        {
+            "lunch": {
+                "soup" : "",
+                "sidedish": "",
+                "salad": ""
+            },
+            "dessert": "",
+            "dinner": {
+                "soup" : "",
+                "sidedish": "",
+                "salad": ""
+            }
+        },
+        {
+            "lunch": {
+                "soup" : "",
+                "sidedish": "",
+                "salad": ""
+            },
+            "dessert": "",
+            "dinner": {
+                "soup" : "",
+                "sidedish": "",
+                "salad": ""
+            }
+        },
+        {
+            "lunch": {
+                "soup" : "",
+                "sidedish": "",
+                "salad": ""
+            },
+            "dessert": "",
+            "dinner": {
+                "soup" : "",
+                "sidedish": "",
+                "salad": ""
+            }
+        },
+        {
+            "lunch": {
+                "soup" : "",
+                "sidedish": "",
+                "salad": ""
+            },
+            "dessert": "",
+            "dinner": {
+                "soup" : "",
+                "sidedish": "",
+                "salad": ""
+            }
+        }
+    ]
+}

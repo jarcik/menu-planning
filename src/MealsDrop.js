@@ -12,6 +12,7 @@ class MealsDrop extends Component {
 
   handleChange(event) {
     let newValue = parseInt(event.target.value);   
+    if(this.state.value == event.target.value || this.state.value == newValue) return;
 
     //update selected state
     if(this.state.value) {

@@ -15,6 +15,11 @@ class App extends Component {
         isLoaded: false,
         selectedMenu: this.createNewSelectedMenu()
       };
+
+      //load list of meals
+      this.loadMealsFromFile();
+      //load saved state
+      this.loadSavedFromServer();
     }
   
   //create initial object of selected meal plan
@@ -44,7 +49,8 @@ class App extends Component {
     return selectedMenu;
   }
 
-  componentDidMount() {
+  //load list of meals from flie
+  loadMealsFromFile() {
     //load meals
     fetch("meals.json")
     .then(res => res.json())
@@ -65,6 +71,26 @@ class App extends Component {
         });
       }
     )
+  }
+
+  //load saved state from server
+  loadSavedFromServer() {    
+    //load saved
+    fetch("http://127.0.0.1:8080/edsa-menu-planning/get-meal.php")
+    .then(response => {
+      return response.text()
+    })
+    .then((result) => {
+      let data = result ? JSON.parse(result) : {};
+      console.log(data);
+      this.setState({selectedMenu: data.meals});
+    },
+    (error) => {
+      console.log(error);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
   }
 
   //get meals from data object
@@ -106,6 +132,33 @@ class App extends Component {
 
     //update state with new object of selected menun
     this.setState({selectedMenu: selectedMenu});
+    //this.saveToServer(selectedMenu);
+  }
+
+  saveToServer(selectedMenu) {
+
+    //save change
+    fetch("http://127.0.0.1:8080/edsa-menu-planning/post-meal.php", {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({meal: selectedMenu})
+    })
+    .then(response => {
+      return response.text()
+    })
+    .then((result) => {
+      let data = result ? JSON.parse(result) : {}
+      console.log(data);
+      this.setState({selectedMenu: data.meals});
+    },
+    (error) => {
+      console.log(error);
+    })
+    .catch((error) => {
+      console.log(error);
+    })
   }
 
   //update selected meal object with selected value
