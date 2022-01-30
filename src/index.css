@@ -23,6 +23,9 @@ code {
 	.hidden-print {
 		display: block;
 	}
+	@page {
+		size: A4 landscape;
+	}
 }
 
 /* reset */

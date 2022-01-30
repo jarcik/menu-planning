@@ -243,13 +243,8 @@ class App extends Component {
 
   //check and print
   print = (clear=false) => {
-    //check before printing
-    if(this.check()) {
-      //everything alright, lets prnt
-      window.print();
-    } else {
-      alert("Nejsou vyplněna všechna pole. Prosím, doplňte.");
-    }
+    //everything alright, lets prnt
+    window.print();
     //clear the data from table if needed
     if(clear) {
       this.clear();
@@ -267,19 +262,6 @@ class App extends Component {
       q.selected = false;
     });
     
-  }
-
-  //check if every object in menu is selected
-  check() {
-    for(let i = 0; i < 7; i++) {
-      let meal = this.state.selectedMenu[i];
-      if(!meal 
-          || !meal.lunch || !meal.lunch.soup || !meal.lunch.salad || !meal.lunch.sidedish
-          || !meal.dinner || !meal.dinner.soup || !meal.dinner.salad || !meal.dinner.sidedish
-          || !meal.dessert)
-        return false;
-    }
-    return true;
   }
 
   //get date for the next weekday
@@ -358,8 +340,8 @@ class App extends Component {
             </tr>
           </tbody>
           </table>
-          <button disabled={this.check() ? "" : "disabled"} onClick={() => this.print(false)}>Vytisknout</button>
-          <button disabled={this.check() ? "" : "disabled"} onClick={() => this.print(true)}>Vytisknout a vyčistit</button>
+          <button onClick={() => this.print(false)}>Vytisknout</button>
+          <button onClick={() => this.print(true)}>Vytisknout a vyčistit</button>
           <button onClick={() => this.clear()}>Vyčistit</button>
         </div>
       );
