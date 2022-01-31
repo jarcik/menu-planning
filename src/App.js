@@ -2,19 +2,17 @@ import './App.css';
 import React, { Component } from 'react';
 import MealsDrop from './MealsDrop';
 import { LUNCH, DESSERTTYPE, DINNER, SOUP, SALAD, SIDEDISH, DESSERT } from './constants';
+import NewMeal from './NewMeal';
 
 const urlAddress = "http://127.0.0.1:8080/edsa-menu-planning/";
 //const urlAddress = "";
 
 class App extends Component {
-
   constructor(props) {
       super(props);
-
       //initiate state
       this.state = {
         meals: null,
-        error: null,
         isLoaded: false,
         selectedMenu: this.createNewSelectedMenu()
       };
@@ -22,7 +20,7 @@ class App extends Component {
 
   componentDidMount() {   
       //load list of meals
-      this.loadMealsFromFile();
+      this.loadMealsFromFile(true, true);
   }
   
   //create initial object of selected meal plan
@@ -30,7 +28,6 @@ class App extends Component {
     //array
     let selectedMenu = [
     ];
-
     //to 7 as days of the week
     for(let i = 0; i < 7; i++) {
       selectedMenu.push({
@@ -47,31 +44,28 @@ class App extends Component {
         }
       });
     }
-
     //return newly created initial object
     return selectedMenu;
   }
 
   //load list of meals from flie
-  loadMealsFromFile() {
+  loadMealsFromFile(loadFromServer = false, setState = true) {
     //load meals
     fetch("meals.json")
     .then(res => res.json())
     .then(
       (result) => {
-        this.setState({
-          meals: result.meals
-        });          
-        //load saved state
-        this.loadSavedFromServer();
-      },
-      // Note: it's important to handle errors here
-      // instead of a catch() block so that we don't swallow
-      // exceptions from actual bugs in components.
-      (error) => {
-        this.setState({
-          error
-        });
+        if(setState) {
+          this.setState({
+            meals: result.meals
+          });       
+        } else {
+          return result.meals;
+        }
+        if(loadFromServer) {
+          //load saved state
+          this.loadSavedFromServer();
+        }
       }
     )
   }
@@ -81,16 +75,13 @@ class App extends Component {
     //load saved
     fetch(urlAddress+"get-meal.php")
     .then(response => {
-      return response.text()
+      return response.text();
     })
     .then((result) => {
       let data = result ? JSON.parse(result) : {};
       this.setState({selectedMenu: data.meals});      
       //set selected
       this.setSelected(data.meals);
-    },
-    (error) => {
-      console.log(error);
     })
     .catch((error) => {
       console.log(error);
@@ -120,8 +111,7 @@ class App extends Component {
     }
 
     //filter by category and not selected state
-    let meals = this.state.meals.filter((q) => q.category === type && (!q.selected ||  q.id === selectedValue));
-    return meals;
+    return this.state.meals.filter((q) => q.category === type && (!q.selected ||  q.id === selectedValue));
   }
 
   //goes throught every object of selected menu and mark meals selected
@@ -175,8 +165,10 @@ class App extends Component {
     //update state with new object of selected menun
     this.setState({selectedMenu: selectedMenu});
     this.saveToServer(selectedMenu);
+    return false;
   }
 
+  //save selected menu to server
   saveToServer(selectedMenu) {
     //save change
     fetch(urlAddress+"post-meal.php", {
@@ -187,9 +179,8 @@ class App extends Component {
       body: JSON.stringify({meals: selectedMenu}),
       meals: JSON.stringify({meals: selectedMenu}),
       data: JSON.stringify({meals: selectedMenu})
-    })
-    .then(response => {
-      return response.text()
+    }).then(response => {
+      return response.text();
     })
     .then((result) => {
     },
@@ -199,6 +190,7 @@ class App extends Component {
     .catch((error) => {
       console.log(error);
     })
+    return false;
   }
 
   //update selected meal object with selected value
@@ -238,7 +230,6 @@ class App extends Component {
       default:
         return null;
     }
-
   }
 
   //check and print
@@ -260,8 +251,7 @@ class App extends Component {
     let newMealsList = this.state.meals.slice();
     newMealsList.forEach(q => {
       q.selected = false;
-    });
-    
+    });    
   }
 
   //get date for the next weekday
@@ -271,11 +261,42 @@ class App extends Component {
     return d.toLocaleDateString("cs-CZ");
   }
 
+  //handle submitting of the new meal added to the list of the meals
+  handleSubmitNewMeal(newMeal) {
+    fetch("meals.json")
+    .then(res => res.json())
+    .then(
+      (result) => {
+        return result.meals;
+     })
+    .then(
+      (result) => {
+        newMeal.id = Math.max.apply(Math, result.map(function(o) { return o.id; })) + 1;
+        result.push(newMeal);
+        //save change
+        fetch(urlAddress+"add-meal.php", {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({meals: result}),
+          meals: JSON.stringify({meals: result}),
+          data: JSON.stringify({meals: result})
+        });
+        this.setState({meals: result});
+      },
+      (error) => {
+        this.setState({
+          error
+        });
+      }
+    );
+    return false;
+  }
+
   render() {
-    const { error, isLoaded } = this.state;
-    if (error) {
-      return <div>Error: {error.message}</div>;
-    } else if (!isLoaded) {
+    const { isLoaded } = this.state;
+    if (!isLoaded) {
       return <div>Loading...</div>;
     } else {
       let days = [0, 1, 2, 3, 4, 5, 6];
@@ -340,9 +361,16 @@ class App extends Component {
             </tr>
           </tbody>
           </table>
+
+          {/* buttons */}
           <button onClick={() => this.print(false)}>Vytisknout</button>
           <button onClick={() => this.print(true)}>Vytisknout a vyčistit</button>
           <button onClick={() => this.clear()}>Vyčistit</button>
+
+          {/* new meal add */}
+          <div className="hidden-print">
+              <NewMeal submitNewMeal={(param) => this.handleSubmitNewMeal(param)} />
+          </div>
         </div>
       );
     }

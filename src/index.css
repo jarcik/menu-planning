@@ -12,7 +12,7 @@ code {
     monospace;
 }
 
-.hidden-print {
+.only-print {
 	display: none;
 }
 
@@ -20,11 +20,14 @@ code {
 	button {
 		display: none;
 	}
-	.hidden-print {
+	.only-print {
 		display: block;
 	}
 	@page {
 		size: A4 landscape;
+	}
+	.hidden-print {
+		display: none;
 	}
 }
 
