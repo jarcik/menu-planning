@@ -4,8 +4,8 @@ import MealsDrop from './MealsDrop';
 import { LUNCH, DESSERTTYPE, DINNER, SOUP, SALAD, SIDEDISH, DESSERT } from './constants';
 import NewMeal from './NewMeal';
 
-const urlAddress = "http://127.0.0.1:8080/edsa-menu-planning/";
-//const urlAddress = "";
+//const urlAddress = "http://127.0.0.1:8080/edsa-menu-planning/";
+const urlAddress = "";
 
 class App extends Component {
   constructor(props) {
@@ -257,7 +257,7 @@ class App extends Component {
   //get date for the next weekday
   getDate(day) {
     let d = new Date();
-    d.setDate(d.getDate() + ((7 - d.getDay()) % 7 + 1) % 7 + day);
+    d.setDate(d.getDate() + ((7 - d.getDay()) % 7) % 7 + day + 1);
     return d.toLocaleDateString("cs-CZ");
   }
 

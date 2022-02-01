@@ -7,7 +7,7 @@
         $data = json_decode($json);
         if($data) {
             //put everything back to the file
-            file_put_contents("meals copy.json", json_encode($data));
+            file_put_contents("meals.json", json_encode($data));
             http_response_code(200); 
         } else {
             echo "no data";
