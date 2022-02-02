@@ -24,3 +24,9 @@ table, button {
 button {
     margin-top: 0;
 }
+
+@media screen {
+    .dessertRow {
+        background-color: coral;
+    }
+}

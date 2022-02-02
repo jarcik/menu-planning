@@ -9,6 +9,7 @@ class MealsDrop extends Component {
       this.state = {value: ""};
 
       this.handleChange = this.handleChange.bind(this);
+      this.handleChangeInput = this.handleChangeInput.bind(this);
   }
 
   componentDidMount() {
@@ -22,35 +23,15 @@ class MealsDrop extends Component {
   }
 
   setSelectedState() {
-    let selected = this.getMeals(this.props.type, this.props.dayTime, this.props.day) ?? "";
+    let selected = this.getMeals(this.props.dayTime, this.props.day, this.props.category) ?? "";
     this.setState({value:selected});
   }
 
   //get meals from data object
-  getMeals(type, dayTime, day) {
+  getMeals(dayTime, day, category) {
     let selected = this.getDateTimeMeal(dayTime, this.props.selectedMenu[day]);
-    let selectedValue = null;
-    //update value
-    switch(type) {
-      case SOUP:
-        selectedValue = selected.soup;
-        break;
-      case SIDEDISH:
-        selectedValue = selected.sidedish;
-        break;
-      case SALAD:
-        selectedValue = selected.salad;
-        break;
-      case DESSERT:
-        selectedValue = selected.dessert;
-        break;
-      default:
-        break;
-    }
+    let selectedValue = selected[category];    
     return selectedValue;
-    //filter by category and not selected state
-    // let meals = this.state.meals.filter((q) => q.category === type && (!q.selected ||  q.id === selectedValue));
-    // return meals;
   }
 
   //get object of daytime
@@ -83,26 +64,48 @@ class MealsDrop extends Component {
     this.props.handleMealsDropChange({
         day: this.props.day,
         value: newValue,
-        type: this.props.type,
-        dayTime: this.props.dayTime
+        dayTime: this.props.dayTime,
+        category: this.props.category
+    });
+  }
+
+  handleChangeInput(event) {
+    let newValue = event.target.value;
+    if(this.state.value == event.target.value || this.state.value == newValue) return;
+    this.setState({value: newValue});
+    this.props.handleMealsDropChange({
+        day: this.props.day,
+        value: newValue,
+        dayTime: this.props.dayTime,
+        category: this.props.category
     });
   }
 
   render() {
       return(
         <div>
-          <select value={this.state.value} onChange={this.handleChange}>
-            <option value="" disabled></option>
-            {this.props.meals &&
-                this.props.meals.map((meal) =>
-                    <option
-                        key={meal.id}
-                        value={meal.id}>
-                        {meal.name}
-                    </option>
-            )}
-          </select>
-          <span className="only-print">{this.props.meals && this.props.meals.find((q) => q.id == this.state.value)?.name}</span>
+          {
+            this.props.category.includes("note") &&
+            <input type="text" value={this.state.value} onChange={this.handleChangeInput} />
+          }
+          {
+            !this.props.category.includes("note") &&
+            <div>
+              <span>{this.props.category}</span>
+              <select value={this.state.value} onChange={this.handleChange}>
+                <option value=""></option>
+                {this.props.meals &&
+                    this.props.meals.map((meal) =>
+                        <option
+                            key={meal.id}
+                            value={meal.id}>
+                            {meal.name}
+                        </option>
+                )}
+              </select>
+              <span className="only-print">{this.props.meals && this.props.meals.find((q) => q.id == this.state.value)?.name}</span>
+            </div>
+          }
         </div>
       );
   }

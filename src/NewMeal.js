@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { SOUP, SALAD, SIDEDISH, DESSERT } from './constants';
+import { SOUP, RICE, LONGCOOK,
+  PROTEIN, SALAD, VEGE, SEAWEED, 
+  CATEGORIESWTHOUTNOTE, DESSERT } from './constants';
 import './NewMeal.css';
 
 //form for the new meal
@@ -41,25 +43,31 @@ class NewMeal extends Component {
       return false;
     }
 
-    //get czech name of type of the meal
+    //get name of type of the meal
     getMealType(mealType) {
         switch(mealType) {
             case SOUP:
-                return "Polévka";
-            case SIDEDISH:
-                return "Příloha";
-            case DESSERT:
-                return "Dezert";
+                return "Soup";
+            case RICE:
+                return "Rice";
+            case LONGCOOK:
+                return "Long Cook";
+            case PROTEIN:
+                return "Protein";
             case SALAD:
-                return "Hlavní jídlo";
+                return "Salad";
+            case VEGE:
+                return "Vegetables";
+            case SEAWEED:
+                return "Seaweed";
+            case DESSERT:
+                return "Dessert";
             default:
                 return "";
         }
     }
   
     render() {    
-    //array for looping throught the types of the meal    
-    const mealType = [SOUP, SALAD, SIDEDISH, DESSERT];
       return (
         <form onSubmit={this.handleSubmit}>
         <h2>Přidání nového jídla</h2>
@@ -71,8 +79,8 @@ class NewMeal extends Component {
               Typ:
               <select className="newMealSelect" value={this.state.category} onChange={this.handleChangeType}>
                     {
-                        mealType &&
-                        mealType.map((mealType) =>
+                      CATEGORIESWTHOUTNOTE &&
+                      CATEGORIESWTHOUTNOTE.map((mealType) =>
                             <option
                                 key={mealType+"new"}
                                 value={mealType}>

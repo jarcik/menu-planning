@@ -1,11 +1,18 @@
 import './App.css';
 import React, { Component } from 'react';
 import MealsDrop from './MealsDrop';
-import { LUNCH, DESSERTTYPE, DINNER, SOUP, SALAD, SIDEDISH, DESSERT } from './constants';
+import Note from './Note';
+import { 
+  LUNCH, DESSERTTYPE, DINNER, 
+  SOUP, SOUPNOTE, RICE, LONGCOOK, LONGCOOKNOTE,
+  PROTEIN, SALAD, SALADNOTE, VEGE, VEGENOTE,
+  SEAWEED, NOTE, CATEGORIES, TYPES, DESSERT,
+  CATEGORIESWTHOUTNOTE, MEALOBJECT
+} from './constants';
 import NewMeal from './NewMeal';
 
-//const urlAddress = "http://127.0.0.1:8080/edsa-menu-planning/";
-const urlAddress = "";
+const urlAddress = "http://127.0.0.1:8080/edsa-menu-planning/";
+//const urlAddress = "";
 
 class App extends Component {
   constructor(props) {
@@ -26,23 +33,10 @@ class App extends Component {
   //create initial object of selected meal plan
   createNewSelectedMenu() {    
     //array
-    let selectedMenu = [
-    ];
+    let selectedMenu = [];
     //to 7 as days of the week
     for(let i = 0; i < 7; i++) {
-      selectedMenu.push({
-        lunch: {
-          soup: "",
-          sidedish: "",
-          salad: ""
-        },
-        dessert: "",
-        dinner:{
-          soup: "",
-          sidedish: "",
-          salad: ""
-        }
-      });
+      selectedMenu.push(MEALOBJECT);
     }
     //return newly created initial object
     return selectedMenu;
@@ -90,56 +84,19 @@ class App extends Component {
 
   //get meals from data object
   getMeals(type, dayTime, day) {
-    let selected = this.getDateTimeMeal(dayTime, this.state.selectedMenu[day]);
-    let selectedValue = null;
-    //update value
-    switch(type) {
-      case SOUP:
-        selectedValue = selected.soup;
-        break;
-      case SIDEDISH:
-        selectedValue = selected.sidedish;
-        break;
-      case SALAD:
-        selectedValue = selected.salad;
-        break;
-      case DESSERT:
-        selectedValue = selected.dessert;
-        break;
-      default:
-        break;
-    }
-
+    //get selected value from the list
+    let selectedValue = this.getDateTimeMeal(dayTime, this.state.selectedMenu[day])[type];
     //filter by category and not selected state
     return this.state.meals.filter((q) => q.category === type && (!q.selected ||  q.id === selectedValue));
   }
 
   //goes throught every object of selected menu and mark meals selected
   setSelected(selectedMenu) {
-    let typesArray = [SALAD, SIDEDISH, SOUP, DESSERT];
-    let dayTimeArray = [LUNCH, DINNER, DESSERTTYPE];
     for(let i = 0; i < 7; i++) {
-      dayTimeArray.forEach(dTA => {
-        typesArray.forEach(tA => {          
+      TYPES.forEach(dTA => {
+        CATEGORIES.forEach(tA => {          
           let selected = this.getDateTimeMeal(dTA, selectedMenu[i]);
-          let selectedValue = null;
-          //update value
-          switch(tA) {
-            case SOUP:
-              selectedValue = selected.soup;
-              break;
-            case SIDEDISH:
-              selectedValue = selected.sidedish;
-              break;
-            case SALAD:
-              selectedValue = selected.salad;
-              break;
-            case DESSERT:
-              selectedValue = selected.dessert;
-              break;
-            default:
-              break;
-          }
+          let selectedValue = selected[tA];
           if(selectedValue !== undefined && selectedValue !== "" && selectedValue !== null) {
             let meal = this.state.meals.find((q) => q.id === selectedValue);
             if(meal) {
@@ -155,12 +112,12 @@ class App extends Component {
   //handle change on the meals dropdown component and update the state
   dropChange = param => {
     let selectedMenu = this.state.selectedMenu;
-    let { dayTime, day, type, value } = param;
+    let { dayTime, day, category, value } = param;
     
     //pick menu for particular day from the array
     let menuForDay = this.state.selectedMenu[day];
     //update object of menu for the day
-    this.updateSelectedMenu(dayTime, type, value, menuForDay);
+    this.updateSelectedMenu(dayTime, value, menuForDay, category);
 
     //update state with new object of selected menun
     this.setState({selectedMenu: selectedMenu});
@@ -182,11 +139,6 @@ class App extends Component {
     }).then(response => {
       return response.text();
     })
-    .then((result) => {
-    },
-    (error) => {
-      console.log(error);
-    })
     .catch((error) => {
       console.log(error);
     })
@@ -194,27 +146,10 @@ class App extends Component {
   }
 
   //update selected meal object with selected value
-  updateSelectedMenu(dayTime, type, value, menuForDay) {
+  updateSelectedMenu(dayTime, value, menuForDay, category) {
     //based on type of the dish select the object for updating the value
     let meal = this.getDateTimeMeal(dayTime, menuForDay);
-
-    //update value
-    switch(type) {
-      case SOUP:
-        meal.soup = value;
-        break;
-      case SIDEDISH:
-        meal.sidedish = value;
-        break;
-      case SALAD:
-        meal.salad = value;
-        break;
-      case DESSERT:
-        meal.dessert = value;
-        break;
-      default:
-        break;
-    }
+    meal[category] = value;
     return menuForDay;
   }
 
@@ -284,14 +219,25 @@ class App extends Component {
           data: JSON.stringify({meals: result})
         });
         this.setState({meals: result});
-      },
-      (error) => {
-        this.setState({
-          error
-        });
       }
     );
     return false;
+  }
+
+  //get to render meals component
+  getMealComponent(type, category, dayIndex) {
+    switch(type) {
+      case LUNCH:
+      case DINNER:
+        return <MealsDrop selectedMenu={this.state.selectedMenu} dayTime={type} meals={this.getMeals(category, type, dayIndex)} day={dayIndex} handleMealsDropChange={this.dropChange} category={category} />;
+      case DESSERTTYPE:
+        if(category === DESSERT) {
+          return <MealsDrop selectedMenu={this.state.selectedMenu} dayTime={type} meals={this.getMeals(DESSERT, type, dayIndex)} day={dayIndex} handleMealsDropChange={this.dropChange} category={category} />;
+        }
+        break;        
+      default:
+        return "";
+    }
   }
 
   render() {
@@ -321,44 +267,23 @@ class App extends Component {
             <tr>{days.map((day, index) => (<td key={"note2"+index}>Pozn.</td>))}</tr>
 
             {/* lunch */}
-            <tr>
-              {
-                //for each day of the week print cell with drops
-                days.map((day, index) => (
-                    <td key={index}>
-                      <MealsDrop key={"lunch"+SOUP+index} selectedMenu={this.state.selectedMenu} dayTime={LUNCH} meals={this.getMeals(SOUP, LUNCH, index)} type={SOUP} day={index} handleMealsDropChange={this.dropChange} />
-                      <MealsDrop key={"lunch"+SIDEDISH+index} selectedMenu={this.state.selectedMenu} dayTime={LUNCH} meals={this.getMeals(SIDEDISH, LUNCH, index)} type={SIDEDISH} day={index} handleMealsDropChange={this.dropChange} />
-                      <MealsDrop key={"lunch"+SALAD+index} selectedMenu={this.state.selectedMenu} dayTime={LUNCH} meals={this.getMeals(SALAD, LUNCH, index)} type={SALAD} day={index} handleMealsDropChange={this.dropChange} />
+            {
+              TYPES.map((type, typeIndex) => (
+                <tr className={type === DESSERTTYPE ? "dessertRow" : ""} key={"type"+typeIndex}>
+                  {days.map((day, dayIndex) => (
+                    <td key={"day"+typeIndex+""+dayIndex}>
+                      {
+                        CATEGORIES.map((category, categoryIndey) => (
+                          <div key={"category"+typeIndex+""+dayIndex+""+categoryIndey}>
+                            {this.getMealComponent(type, category, dayIndex)}
+                          </div>
+                        ))
+                      }
                     </td>
-                ))
-              }
-            </tr>
-
-            {/* desert */}
-            <tr>
-              {
-                //for each day of the week print cell with drops
-                days.map((day, index) => (
-                    <td key={index}>
-                      <MealsDrop key={"dessert"+index} selectedMenu={this.state.selectedMenu}  dayTime={DESSERTTYPE} meals={this.getMeals(DESSERT, DESSERTTYPE, index)} type={DESSERT} day={index} handleMealsDropChange={this.dropChange} />
-                    </td>
-                ))
-              }
-            </tr>
-
-            {/* dinner */}
-            <tr>
-              {
-                //for each day of the week print cell with drops
-                days.map((day, index) => (
-                    <td key={index}>
-                      <MealsDrop key={"dinner"+SOUP+index} selectedMenu={this.state.selectedMenu}  dayTime={DINNER} meals={this.getMeals(SOUP, DINNER, index)} type={SOUP} day={index} handleMealsDropChange={this.dropChange} />
-                      <MealsDrop key={"dinner"+SIDEDISH+index} selectedMenu={this.state.selectedMenu}  dayTime={DINNER} meals={this.getMeals(SIDEDISH, DINNER, index)} type={SIDEDISH} day={index} handleMealsDropChange={this.dropChange} />
-                      <MealsDrop key={"dinner"+SALAD+index} selectedMenu={this.state.selectedMenu}  dayTime={DINNER} meals={this.getMeals(SALAD, DINNER, index)} type={SALAD} day={index} handleMealsDropChange={this.dropChange} />
-                    </td>
-                ))
-              }
-            </tr>
+                  ))}
+                </tr>
+              ))
+            }
           </tbody>
           </table>
 

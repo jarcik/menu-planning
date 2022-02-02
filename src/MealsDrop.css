@@ -1,7 +1,13 @@
-select {
+select, input {
     display: block;
-    margin: 0.5em 0.5em 0 0.5em;
-    width: calc(100% - 1em);
+    margin: 0.5em 0 0 3em;
+}
+
+select {    
+    width: calc(100% - 3em);
+}
+input {
+    width: calc(100% - 3.5em);
 }
 
 select:last-child {
@@ -9,7 +15,7 @@ select:last-child {
 }
 
 @media print {
-	select {
+	select, input {
 		display: none;
 	}
 }
