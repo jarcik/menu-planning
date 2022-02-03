@@ -71,13 +71,13 @@ class NewMeal extends Component {
       return (
         <form onSubmit={this.handleSubmit}>
         <h2>Přidání nového jídla</h2>
-          <label>
+          <label className="newMeal">
             Název:
-            <input type="text" value={this.state.name} onChange={this.handleChangeName} />
+            <input className="newMeal" type="text" value={this.state.name} onChange={this.handleChangeName} />
           </label>
           <label>
-              Typ:
-              <select className="newMealSelect" value={this.state.category} onChange={this.handleChangeType}>
+              Kategorie:
+              <select className="newMeal" value={this.state.category} onChange={this.handleChangeType}>
                     {
                       CATEGORIESWTHOUTNOTE &&
                       CATEGORIESWTHOUTNOTE.map((mealType) =>
@@ -89,7 +89,7 @@ class NewMeal extends Component {
                     )}
                 </select>
           </label>
-          <input disabled={!this.state.name} type="submit" value="Uložit" />
+          <input className="newMeal" disabled={!this.state.name} type="submit" value="Uložit" />
         </form>
       );
     }

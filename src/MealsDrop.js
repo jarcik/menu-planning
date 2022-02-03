@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './MealsDrop.css';
-import { LUNCH, DESSERTTYPE, DINNER, SOUP, SALAD, SIDEDISH, DESSERT } from './constants';
+import { LUNCH, DESSERTTYPE, DINNER, NOTE } from './constants';
 
 class MealsDrop extends Component {
 
@@ -50,7 +50,13 @@ class MealsDrop extends Component {
   }
 
   handleChange(event) {
-    let newValue = parseInt(event.target.value);
+    let newValue = "";
+    if(event.target.value) {
+      newValue = parseInt(event.target.value);
+    } else {      
+      newValue = event.target.value;
+    }
+
     if(this.state.value == event.target.value || this.state.value == newValue) return;
 
     //update selected state
@@ -58,7 +64,9 @@ class MealsDrop extends Component {
       let old = this.props.meals.find((q) => q.id === this.state.value);
       old.selected = false;
     }
-    this.props.meals.find((q) => q.id === newValue).selected = true;
+    if(newValue !== "") {
+      this.props.meals.find((q) => q.id === newValue).selected = true;
+    }
 
     this.setState({value: newValue});
     this.props.handleMealsDropChange({
@@ -86,12 +94,16 @@ class MealsDrop extends Component {
         <div>
           {
             this.props.category.includes("note") &&
-            <input type="text" value={this.state.value} onChange={this.handleChangeInput} />
+            <input type="text" className={this.props.category === NOTE ? "noteInput" : "" } value={this.state.value} onChange={this.handleChangeInput} />            
+          }          
+          {
+            this.props.category.includes("note") && this.state.value &&
+            <span className="only-print note">pozn.: {this.state.value}</span>
           }
           {
             !this.props.category.includes("note") &&
             <div>
-              <span>{this.props.category}</span>
+              <span className="hidden-print">{this.props.category}</span>
               <select value={this.state.value} onChange={this.handleChange}>
                 <option value=""></option>
                 {this.props.meals &&

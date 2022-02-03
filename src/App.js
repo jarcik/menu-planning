@@ -1,13 +1,9 @@
 import './App.css';
 import React, { Component } from 'react';
 import MealsDrop from './MealsDrop';
-import Note from './Note';
 import { 
   LUNCH, DESSERTTYPE, DINNER, 
-  SOUP, SOUPNOTE, RICE, LONGCOOK, LONGCOOKNOTE,
-  PROTEIN, SALAD, SALADNOTE, VEGE, VEGENOTE,
-  SEAWEED, NOTE, CATEGORIES, TYPES, DESSERT,
-  CATEGORIESWTHOUTNOTE, MEALOBJECT
+  CATEGORIES, TYPES, DESSERT, MEALOBJECT
 } from './constants';
 import NewMeal from './NewMeal';
 
@@ -229,6 +225,7 @@ class App extends Component {
     switch(type) {
       case LUNCH:
       case DINNER:
+        if(category === DESSERT) return;
         return <MealsDrop selectedMenu={this.state.selectedMenu} dayTime={type} meals={this.getMeals(category, type, dayIndex)} day={dayIndex} handleMealsDropChange={this.dropChange} category={category} />;
       case DESSERTTYPE:
         if(category === DESSERT) {

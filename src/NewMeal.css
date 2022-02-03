@@ -2,13 +2,17 @@ form {
     margin-bottom: 2em;
 }
 
-form select {
+form select, form input[type="submit"] {
     width: 100px;
-    display: inline;
+}
+
+form input {
+    width: 250px;
 }
 
 form input, form select, form label {
     margin-left: 1em;
+    display: inline;
 }
 
 h2 {

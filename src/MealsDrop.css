@@ -19,3 +19,13 @@ select:last-child {
 		display: none;
 	}
 }
+
+.note {
+    font-size: 0.5em;
+    font-style: italic;
+}
+
+.noteInput {
+    width: calc(100% - 1em);
+    margin-left: 0.5em;
+}
