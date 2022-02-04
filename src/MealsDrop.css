@@ -27,5 +27,24 @@ select:last-child {
 
 .noteInput {
     width: calc(100% - 1em);
+    margin-top: 1em;
     margin-left: 0.5em;
+}
+
+@media only screen and (max-width: 900px) {
+    /* For mobile phones: */
+    select {    
+        width: calc(95%);
+    }
+    input {
+        width: calc(95% - 7px);
+    }
+    select, input {        
+        margin: 5px 0 0 2px;
+    }
+    .noteInput {
+        width: 95%;
+        margin-left: 0;
+        margin-top: 15px;
+    }
 }
