@@ -115,7 +115,7 @@ class MealsDrop extends Component {
                         </option>
                 )}
               </select>
-              <span className="only-print">{this.props.meals && this.props.meals.find((q) => q.id == this.state.value)?.name}</span>
+              <span className="only-print meal-print">{this.props.meals && this.props.meals.find((q) => q.id == this.state.value)?.name}</span>
             </div>
           }
         </div>

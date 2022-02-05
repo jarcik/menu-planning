@@ -18,10 +18,13 @@ select:last-child {
 	select, input {
 		display: none;
 	}
-}
+    .meal-print {
+        font-size: 14px;
+    }
+} 
 
 .note {
-    font-size: 0.5em;
+    font-size: 9px;
     font-style: italic;
 }
 
