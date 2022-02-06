@@ -69,9 +69,8 @@ class App extends Component {
     })
     .then((result) => {
       let data = result ? JSON.parse(result) : {};
-      this.setState({selectedMenu: data.meals});      
-      //set selected
-      this.setSelected(data.meals);
+      this.setState({selectedMenu: data.meals});     
+      this.setState({isLoaded:true});
     })
     .catch((error) => {
       console.log(error);
@@ -80,36 +79,7 @@ class App extends Component {
 
   //get meals from data object
   getMeals(type, dayTime, day) {
-    //get selected value from the list
-    let selectedValue = this.getDateTimeMeal(dayTime, this.state.selectedMenu[day])[type];
-    //for dessert allow repetition
-    //for others not allow repetition
-    if(type === DESSERT) {
-      //filter by category and not selected state
-      return this.state.meals.filter((q) => q.category === type);
-    } else {
-      //filter by category and not selected state
-      return this.state.meals.filter((q) => q.category === type && (!q.selected ||  q.id === selectedValue));
-    }
-  }
-
-  //goes throught every object of selected menu and mark meals selected
-  setSelected(selectedMenu) {
-    for(let i = 0; i < 7; i++) {
-      TYPES.forEach(dTA => {
-        CATEGORIES.forEach(tA => {          
-          let selected = this.getDateTimeMeal(dTA, selectedMenu[i]);
-          let selectedValue = selected[tA];
-          if(selectedValue !== undefined && selectedValue !== "" && selectedValue !== null) {
-            let meal = this.state.meals.find((q) => q.id === selectedValue);
-            if(meal) {
-              meal.selected = true;
-            }
-          }
-        });
-      });
-    }
-    this.setState({isLoaded:true});
+    return this.state.meals.filter((q) => q.category === type);
   }
 
   //handle change on the meals dropdown component and update the state
@@ -185,11 +155,6 @@ class App extends Component {
     let newMenu = this.createNewSelectedMenu();
     this.setState({selectedMenu: newMenu});
     this.saveToServer(newMenu);
-
-    let newMealsList = this.state.meals.slice();
-    newMealsList.forEach(q => {
-      q.selected = false;
-    });    
   }
 
   //get date for the next weekday

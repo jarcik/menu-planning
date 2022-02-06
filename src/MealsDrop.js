@@ -59,17 +59,6 @@ class MealsDrop extends Component {
 
     if(this.state.value == event.target.value || this.state.value == newValue) return;
 
-    //update selected state
-    if(this.props.category != DESSERT) {
-      if(this.state.value) {
-        let old = this.props.meals.find((q) => q.id === this.state.value);
-        old.selected = false;
-      }
-      if(newValue !== "") {
-        this.props.meals.find((q) => q.id === newValue).selected = true;
-      }
-    }
-
     this.setState({value: newValue});
     this.props.handleMealsDropChange({
         day: this.props.day,
