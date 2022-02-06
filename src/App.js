@@ -7,8 +7,8 @@ import {
 } from './constants';
 import NewMeal from './NewMeal';
 
-const urlAddress = "http://127.0.0.1:8080/edsa-menu-planning/";
-//const urlAddress = "";
+//const urlAddress = "http://127.0.0.1:8080/edsa-menu-planning/";
+const urlAddress = "";
 
 class App extends Component {
   constructor(props) {
