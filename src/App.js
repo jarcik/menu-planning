@@ -7,8 +7,8 @@ import {
 } from './constants';
 import NewMeal from './NewMeal';
 
-//const urlAddress = "http://127.0.0.1:8080/edsa-menu-planning/";
-const urlAddress = "";
+const urlAddress = "http://127.0.0.1:8080/edsa-menu-planning/";
+//const urlAddress = "";
 
 class App extends Component {
   constructor(props) {
@@ -82,8 +82,15 @@ class App extends Component {
   getMeals(type, dayTime, day) {
     //get selected value from the list
     let selectedValue = this.getDateTimeMeal(dayTime, this.state.selectedMenu[day])[type];
-    //filter by category and not selected state
-    return this.state.meals.filter((q) => q.category === type && (!q.selected ||  q.id === selectedValue));
+    //for dessert allow repetition
+    //for others not allow repetition
+    if(type === DESSERT) {
+      //filter by category and not selected state
+      return this.state.meals.filter((q) => q.category === type);
+    } else {
+      //filter by category and not selected state
+      return this.state.meals.filter((q) => q.category === type && (!q.selected ||  q.id === selectedValue));
+    }
   }
 
   //goes throught every object of selected menu and mark meals selected
@@ -260,8 +267,8 @@ class App extends Component {
           </thead>
           <tbody>
             {/* notes */}
-            <tr>{days.map((day, index) => (<td key={"note1"+index}>Pozn.</td>))}</tr>
-            <tr>{days.map((day, index) => (<td key={"note2"+index}>Pozn.</td>))}</tr>
+            <tr className="noteRow">{days.map((day, index) => (<td key={"note1"+index}></td>))}</tr>
+            <tr className="noteRow">{days.map((day, index) => (<td key={"note2"+index}></td>))}</tr>
 
             {/* lunch */}
             {

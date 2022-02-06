@@ -30,3 +30,7 @@ button {
         background-color: coral;
     }
 }
+
+.noteRow {
+    height: 25px;
+}
