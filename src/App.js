@@ -7,8 +7,8 @@ import {
 } from './constants';
 import NewMeal from './NewMeal';
 
-//const urlAddress = "http://127.0.0.1:8080/edsa-menu-planning/";
-const urlAddress = "";
+const urlAddress = "http://127.0.0.1:8080/edsa-menu-planning/";
+//const urlAddress = "";
 
 class App extends Component {
   constructor(props) {
@@ -193,29 +193,19 @@ class App extends Component {
   }
 
   //get to render meals component
-  getMealComponent(type, category, dayIndex) {
+  getMealComponent(type, category, dayIndex, key) {
     switch(type) {
       case LUNCH:
       case DINNER:
         if(category === DESSERT) return;
-        return <MealsDrop selectedMenu={this.state.selectedMenu} dayTime={type} meals={this.getMeals(category, type, dayIndex)} day={dayIndex} handleMealsDropChange={this.dropChange} category={category} />;
+        return <MealsDrop key={key} selectedMenu={this.state.selectedMenu} dayTime={type} meals={this.getMeals(category, type, dayIndex)} day={dayIndex} handleMealsDropChange={this.dropChange} category={category} />;
       case DESSERTTYPE:
         if(category === DESSERT) {
-          return <MealsDrop selectedMenu={this.state.selectedMenu} dayTime={type} meals={this.getMeals(DESSERT, type, dayIndex)} day={dayIndex} handleMealsDropChange={this.dropChange} category={category} />;
+          return <MealsDrop key={key} selectedMenu={this.state.selectedMenu} dayTime={type} meals={this.getMeals(DESSERT, type, dayIndex)} day={dayIndex} handleMealsDropChange={this.dropChange} category={category} />;
         }
         break;        
       default:
         return "";
-    }
-  }
-
-  getCss(type, category) {
-    const mealComponent = "mealComponent";
-    const borderTop = "border-top";
-
-    let css = "";
-    if(type != DESSERTTYPE && !category.includes("note") && category !== DESSERT) {
-      css+= "mealComponent";
     }
   }
 
@@ -253,9 +243,7 @@ class App extends Component {
                     <td key={"day"+typeIndex+""+dayIndex}>
                       {
                         CATEGORIES.map((category, categoryIndey) => (
-                          <div className={(type != DESSERTTYPE && !category.includes("note") && category !== DESSERT) ? "mealComponent border-top" : ""} key={"category"+typeIndex+""+dayIndex+""+categoryIndey}>
-                            {this.getMealComponent(type, category, dayIndex)}
-                          </div>
+                            this.getMealComponent(type, category, dayIndex, "category"+typeIndex+""+dayIndex+""+categoryIndey)
                         ))
                       }
                     </td>

@@ -82,7 +82,7 @@ class MealsDrop extends Component {
 
   render() {
       return(
-        <div>
+        <div className={((this.props.type != DESSERTTYPE && !this.props.category.includes("note") && this.props.category !== DESSERT) ? "mealComponent" : "") + ((this.props.type != DESSERTTYPE && !this.props.category.includes("note") && this.props.category !== DESSERT && this.state.value !== "") ? " btmc" : "")}>
           {
             this.props.category.includes("note") &&
             <input type="text" className={this.props.category === NOTE ? "noteInput" : "" } value={this.state.value} onChange={this.handleChangeInput} />            
@@ -105,10 +105,13 @@ class MealsDrop extends Component {
                             {meal.name}
                         </option>
                 )}
-              </select>
-              <span className="only-print meal-print">{this.props.meals && this.props.meals.find((q) => q.id == this.state.value)?.name}</span>
+              </select>      
             </div>
-          }
+          }          
+          {
+            this.state.value !== "" && this.props.meals && this.props.meals.find((q) => q.id == this.state.value) &&
+            <span className={"only-print meal-print "+(this.props.category != DESSERT ? "border-top" : "")}>{this.props.meals.find((q) => q.id == this.state.value)?.name}</span>
+          }        
         </div>
       );
   }

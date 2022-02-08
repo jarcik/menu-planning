@@ -20,6 +20,24 @@ select:last-child {
 	}
     .meal-print {
         font-size: 12px;
+        padding-top: 2px;
+    }
+    
+    .mealComponent:first-child .meal-print {
+        margin-top: 0;
+        padding-top: 0;
+    }
+    td {
+        padding-bottom: 8px;
+    }
+    td > .btmc {
+        border: none;
+        margin-top: 0;
+    }
+    
+    td > .btmc ~ .btmc {
+        border-top: gray 1px solid;
+        margin-top: 12px;
     }
 } 
 
