@@ -209,6 +209,16 @@ class App extends Component {
     }
   }
 
+  getCss(type, category) {
+    const mealComponent = "mealComponent";
+    const borderTop = "border-top";
+
+    let css = "";
+    if(type != DESSERTTYPE && !category.includes("note") && category !== DESSERT) {
+      css+= "mealComponent";
+    }
+  }
+
   render() {
     const { isLoaded } = this.state;
     if (!isLoaded) {
@@ -221,13 +231,13 @@ class App extends Component {
           <thead>
             <tr>
               {/* days of the week + date */}
-              <th>Pondělí<br/>{this.getDate(0)}</th>
-              <th>Úterý<br/>{this.getDate(1)}</th>
-              <th>Středa<br/>{this.getDate(2)}</th>
-              <th>Čtvrtek<br/>{this.getDate(3)}</th>
-              <th>Pátek<br/>{this.getDate(4)}</th>
-              <th>Sobota<br/>{this.getDate(5)}</th>
-              <th>Neděle<br/>{this.getDate(6)}</th>
+              <th>Monday<br/>{this.getDate(0)}</th>
+              <th>Tuesday<br/>{this.getDate(1)}</th>
+              <th>Wednesday<br/>{this.getDate(2)}</th>
+              <th>Thursday<br/>{this.getDate(3)}</th>
+              <th>Friday<br/>{this.getDate(4)}</th>
+              <th>Saturday<br/>{this.getDate(5)}</th>
+              <th>Sunday<br/>{this.getDate(6)}</th>
             </tr>
           </thead>
           <tbody>
@@ -243,7 +253,7 @@ class App extends Component {
                     <td key={"day"+typeIndex+""+dayIndex}>
                       {
                         CATEGORIES.map((category, categoryIndey) => (
-                          <div key={"category"+typeIndex+""+dayIndex+""+categoryIndey}>
+                          <div className={(type != DESSERTTYPE && !category.includes("note") && category !== DESSERT) ? "mealComponent border-top" : ""} key={"category"+typeIndex+""+dayIndex+""+categoryIndey}>
                             {this.getMealComponent(type, category, dayIndex)}
                           </div>
                         ))

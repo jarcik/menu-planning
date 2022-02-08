@@ -23,9 +23,6 @@ code {
 	.only-print {
 		display: block;
 	}
-	@page {
-		size: A4 landscape;
-	}
 	.hidden-print {
 		display: none;
 	}

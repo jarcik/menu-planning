@@ -89,7 +89,7 @@ class MealsDrop extends Component {
           }          
           {
             this.props.category.includes("note") && this.state.value &&
-            <span className="only-print note">pozn.: {this.state.value}</span>
+            <span className="only-print note">{this.state.value}</span>
           }
           {
             !this.props.category.includes("note") &&

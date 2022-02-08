@@ -34,3 +34,27 @@ button {
 .noteRow {
     height: 25px;
 }
+
+.mealComponent {
+    margin-top: 20px;
+}
+.mealComponent:first-child {
+    margin-top: 0;
+}
+
+@media print {    
+    .mealComponent {
+        margin-top: 15px;
+        padding-top: 3px;
+    }
+    .mealComponent:first-child {
+        margin-top: 0;
+        padding-top: 0;
+    }
+    .border-top {
+        border-top: gray 1px solid;
+    }    
+    .border-top:first-child {
+        border-top: none;
+    }
+}
