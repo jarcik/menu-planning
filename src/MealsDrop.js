@@ -100,7 +100,7 @@ class MealsDrop extends Component {
                 {this.props.meals &&
                     this.props.meals.map((meal) =>
                         <option
-                            key={meal.id}
+                            key={this.props.keyToShow + "" + meal.id}
                             value={meal.id}>
                             {meal.name}
                         </option>

@@ -41,3 +41,14 @@ button {
 .mealComponent:first-child {
     margin-top: 0;
 }
+
+.errorMessage {
+    padding: 5px;
+    background-color: red;
+    width: 100%;
+}
+
+.errorMessage button {
+    font-size: 12px;
+    margin: 0;
+}
